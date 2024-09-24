@@ -2,7 +2,7 @@
 session_start();
 include 'db.php';
 
-// Ensure user is authenticated
+
 if (!isset($_SESSION['user_id'])) {
     header('Location: login.php');
     exit();
@@ -10,12 +10,12 @@ if (!isset($_SESSION['user_id'])) {
 
 $user_id = $_SESSION['user_id'];
 
-// Handle rename logic
+
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $file_id = $_POST['file_id'];
     $new_name = mysqli_real_escape_string($conn, $_POST['new_name']);
 
-    // Update filename in the database
+    
     $query = "UPDATE files SET filename='$new_name' WHERE id='$file_id' AND user_id='$user_id'";
     if (mysqli_query($conn, $query)) {
         header('Location: dashboard.php'); // Redirect back to the manage files page
@@ -25,7 +25,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     }
 }
 
-// Get file ID from the query string
+
 if (isset($_GET['id'])) {
     $file_id = $_GET['id'];
 
