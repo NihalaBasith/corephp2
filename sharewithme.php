@@ -1,6 +1,6 @@
 <?php
 session_start();
-include('db.php'); // Include your database connection file
+include('db.php'); 
 
 // Ensure user is authenticated
 if (!isset($_SESSION['user_id'])) {
@@ -10,7 +10,7 @@ if (!isset($_SESSION['user_id'])) {
 
 $user_id = $_SESSION['user_id'];
 
-// Fetch files shared with the user
+
 $query = "
     SELECT f.*, u.username AS shared_by 
     FROM files f 
@@ -145,7 +145,7 @@ $result = mysqli_query($conn, $query);
                     <?php while ($file = mysqli_fetch_assoc($result)): ?>
                         <tr>
                             <td><?php echo htmlspecialchars($file['filename']); ?></td>
-                            <td><?php echo htmlspecialchars($file['shared_by']); // This should now be correct ?></td>
+                            <td><?php echo htmlspecialchars($file['shared_by']);  ?></td>
                             <td>
     <a href="<?php echo htmlspecialchars($file['file_path']); ?>" target="_blank" class="view-button">View</a>
 </td>
