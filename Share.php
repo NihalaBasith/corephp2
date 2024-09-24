@@ -7,12 +7,12 @@ if (!isset($_SESSION['user_id'])) {
     exit();
 }
 
-// Handle the sharing logic
+
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $file_id = $_POST['file_id'];
-    $shared_user_id = $_POST['share_with']; // This will be the user ID from the dropdown
+    $shared_user_id = $_POST['share_with']; 
 
-    // Update the file's shared_with field
+   
     $query = "UPDATE files SET shared_with='$shared_user_id' WHERE id='$file_id' AND user_id='" . $_SESSION['user_id'] . "'";
     if (mysqli_query($conn, $query)) {
         echo "<p class='success'>File shared successfully!</p>";
@@ -21,7 +21,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     }
 }
 
-// Fetch all users for the dropdown
+
 $user_query = "SELECT id, username FROM users";
 $user_result = mysqli_query($conn, $user_query);
 
