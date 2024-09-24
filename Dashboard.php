@@ -10,13 +10,13 @@ if (!isset($_SESSION['user_id'])) {
 
 $user_id = $_SESSION['user_id'];
 
-// Fetch logged-in user's information
+
 $user_query = "SELECT username FROM users WHERE id = '$user_id'";
 $user_result = mysqli_query($conn, $user_query);
 $user = mysqli_fetch_assoc($user_result);
 $username = $user['username'];
 
-// Handle file upload logic
+
 if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_FILES['file'])) {
     $allowed_types = ['image/jpeg', 'image/png', 'image/gif'];
     $max_size = 5 * 1024 * 1024; // 5MB
@@ -31,7 +31,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_FILES['file'])) {
         $file_path = $upload_dir . $file_name;
 
         if (move_uploaded_file($_FILES['file']['tmp_name'], $file_path)) {
-            // Save file details to the database
+           
             $query = "INSERT INTO files (user_id, filename, file_path) VALUES ('$user_id', '$file_name', '$file_path')";
             mysqli_query($conn, $query);
             $_SESSION['upload_message'] = "File uploaded successfully!"; // Store success message
@@ -45,28 +45,28 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_FILES['file'])) {
     }
 }
 
-// Handle delete file logic
+
 if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['delete_file'])) {
     $file_id = $_POST['file_id'];
     $delete_query = "DELETE FROM files WHERE id='$file_id' AND user_id='$user_id'";
     mysqli_query($conn, $delete_query);
-    $_SESSION['upload_message'] = "File deleted successfully!"; // Store success message
-    header("Location: " . $_SERVER['PHP_SELF']); // Refresh the page
+    $_SESSION['upload_message'] = "File deleted successfully!"; 
+    header("Location: " . $_SERVER['PHP_SELF']); 
     exit();
    
 }
 
 function getFiles($conn, $user_id, $searchTerm = '') {
-    $searchTerm = mysqli_real_escape_string($conn, $searchTerm); // Prevent SQL injection
+    $searchTerm = mysqli_real_escape_string($conn, $searchTerm); 
 
-    // Prepare the base query
+
     $file_query = "
         SELECT files.id, files.filename 
         FROM files 
         WHERE files.user_id = '$user_id'
     ";
 
-    // Append search condition if search term is provided
+
     if (!empty($searchTerm)) {
         $file_query .= " AND files.filename LIKE '%$searchTerm%'";
     }
@@ -74,13 +74,12 @@ function getFiles($conn, $user_id, $searchTerm = '') {
     // Execute the query
     $file_result = mysqli_query($conn, $file_query);
     
-    return $file_result; // Return the result set
+    return $file_result; 
 }
 
-// Check if a search term is provided
+
 $searchTerm = isset($_GET['search']) ? $_GET['search'] : '';
 
-// Fetch all files based on the search term
 $file_result = getFiles($conn, $user_id, $searchTerm);
 ?>
 
@@ -207,17 +206,17 @@ $file_result = getFiles($conn, $user_id, $searchTerm);
 .shared-button {
     display: inline-block;
     padding: 10px 20px;
-    background-color: #4CAF50; /* Green color */
+    background-color: #4CAF50;
     color: white;
     text-align: center;
     text-decoration: none;
     border-radius: 5px;
-    transition: background-color 0.3s, transform 0.3s; /* Smooth transition */
+    transition: background-color 0.3s, transform 0.3s; 
 }
 
 .shared-button:hover {
-    background-color: #45a049; /* Darker green on hover */
-    transform: translateY(-2px); /* Slight lift effect */
+    background-color: #45a049; 
+    transform: translateY(-2px); 
 }
 
 .shared-button:active {
@@ -237,7 +236,7 @@ $file_result = getFiles($conn, $user_id, $searchTerm);
             <div class="message show">
                 <?php 
                 echo htmlspecialchars($_SESSION['upload_message']);
-                unset($_SESSION['upload_message']); // Clear the message after displaying
+                unset($_SESSION['upload_message']); 
                 ?>
             </div>
         <?php endif; ?>
@@ -280,27 +279,26 @@ $file_result = getFiles($conn, $user_id, $searchTerm);
                         echo "<td>" . htmlspecialchars($file['filename']) . "</td>";
                         echo "<td class='file-actions'>";
 
-                        // View File
-                      // View File
+                      
                         echo "<form action='view_file.php' method='GET' style='display: inline;'>
                         <input type='hidden' name='id' value='" . htmlspecialchars($file['id']) . "'>
                         <button type='submit' class='view-btn'>View</button>
                         </form>";
 
 
-                        // Rename File
+                       
                         echo "<form action='Rename.php' method='GET' style='display: inline;'>
                                 <input type='hidden' name='id' value='" . htmlspecialchars($file['id']) . "'>
                                 <button type='submit' class='rename-btn'>Rename</button>
                               </form>";
 
-                        // Delete File
+                       
                         echo "<form method='POST' style='display: inline;'>
                                 <input type='hidden' name='file_id' value='" . htmlspecialchars($file['id']) . "'>
                                 <button type='submit' name='delete_file' class='delete-btn'>Delete</button>
                               </form>";
 
-                        // Share File
+                        
                         echo "<form action='share.php' method='GET' style='display: inline;'>
                                 <input type='hidden' name='id' value='" . htmlspecialchars($file['id']) . "'>
                                 <button type='submit' class='share-btn'>Share</button>
